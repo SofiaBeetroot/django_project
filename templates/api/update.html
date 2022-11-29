@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Question</title>
+</head>
+<body>
+<h1>Update member</h1>
+
+<form action="http://localhost:8000/question/perform_update/{{ quest.id }}" method="post">
+{% csrf_token %}
+Question title:<br>
+<input name="question_text" value="{{ quest.question_text }}">
+<br><br>
+Question text:<br>
+<input name="question_large_text" value="{{ quest.question_large_text }}">
+<br><br>
+<input type="submit" value="Submit">
+</form>
+</body>
+</html>
