@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.generic.list import ListView
 
 from .models import *
-from .forms import QuestionForm
+from .forms import QuestionForm, QuestionModelFrom
 
 
 def index(request):
@@ -34,12 +34,12 @@ def blog_view(request):
 def create_question(request):
     template = loader.get_template('api/question.html')
     if request.method == 'POST':
-        form = QuestionForm(request.POST)
+        form = QuestionModelFrom(request.POST)
         if form.is_valid():
             Question.objects.create(**form.cleaned_data)
             return HttpResponseRedirect('test/')
     else:
-        form = QuestionForm()
+        form = QuestionModelFrom()
     return HttpResponse(template.render({'form': form}, request))
 
 

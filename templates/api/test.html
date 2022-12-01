@@ -1,14 +1,20 @@
+{% load question_filter %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.css' %}">
 </head>
 <body>
+{% current_time "%d-%m-%Y %H:%M" as the_time %}
+<h1>The time is {{ the_time }}.</h1>
 {% if list %}
-    <ul>
+    <ul class="list-group">
     {% for question in list %}
-        <li>{{ question.question_text }} <a href="http://localhost:8000/question/update/{{ question.id }}">Update</a></li>
+        <li class="list-group-item">{{ question.question_text | title }} <a href="http://localhost:8000/question/update/{{ question.id }}">Update</a></li>
+        <p>{{ question.pub_date | date_format}}</p>
     {% endfor %}
     </ul>
 {% else %}
