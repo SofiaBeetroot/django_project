@@ -19,10 +19,11 @@ from django.urls import path
 from api.views import *
 
 urlpatterns = [
+    path('', home_view),
     path('admin/', admin.site.urls),
     path('hello/', index),
     path('test/', QuestionList.as_view(), name='test'),
-    path('blogs', blog_view),
+    path('blogs/', blog_view),
     path('question/create/', create_question),
     path('question/update/<int:id>', update_question),
     path('question/perform_update/<int:id>', perform_update),

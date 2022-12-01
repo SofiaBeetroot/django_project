@@ -44,6 +44,12 @@ class Entry(models.Model):
     def __str__(self):
         return self.headline
 
+    def get_rating(self):
+        return self.rating
+
+    def get_author_list(self):
+        return self.authors.all()
+
 
 class Notes(models.Model):
     title = models.CharField(max_length=124)

@@ -65,3 +65,10 @@ class QuestionList(ListView):
         context = super().get_context_data(**kwargs)
         context['list'] = Question.objects.all()
         return context
+
+
+def home_view(request):
+    query = Entry.objects.all()
+    template = loader.get_template('extended.html')
+    context = {'blog_entries': query}
+    return HttpResponse(template.render(context, request))
