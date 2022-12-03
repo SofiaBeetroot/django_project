@@ -11,12 +11,18 @@
 {% current_time "%d-%m-%Y %H:%M" as the_time %}
 <h1>The time is {{ the_time }}.</h1>
 {% if list %}
-    <ul class="list-group">
-    {% for question in list %}
-        <li class="list-group-item">{{ question.question_text | title }} <a href="http://localhost:8000/question/update/{{ question.id }}">Update</a></li>
-        <p>{{ question.pub_date | date_format}}</p>
-    {% endfor %}
-    </ul>
+    <div class="list-group">
+        {% for question in list %}
+          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ question.question_text | title }}</h5>
+              <small>{{ question.pub_date | date_format }}</small>
+            </div>
+            <p class="mb-1">{{ question.question_large_text }}</p>
+            <small>{# <a href="http://localhost:8000/question/update/{{ question.id }}">Update</a> #}Update</small>
+          </a>
+        {% endfor %}
+    </div>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}

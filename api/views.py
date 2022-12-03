@@ -3,9 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.views.generic.list import ListView
+from django.contrib.auth import authenticate, login
 
 from .models import *
-from .forms import QuestionForm, QuestionModelFrom
+from .forms import QuestionForm, QuestionModelFrom, LoginForm
 
 
 def index(request):
@@ -72,3 +73,21 @@ def home_view(request):
     template = loader.get_template('extended.html')
     context = {'blog_entries': query}
     return HttpResponse(template.render(context, request))
+
+
+def login_view(request):
+    template = loader.get_template('api/login.html')
+    form = LoginForm()
+    return HttpResponse(template.render({'form': form}, request))
+
+
+def auth_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(**form.cleaned_data)
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('test'))
+        else:
+            return HttpResponse('Wrong method')

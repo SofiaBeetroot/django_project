@@ -1,11 +1,25 @@
+from django.contrib import admin
 from django.db import models
 from datetime import date
+from django.utils import timezone
+import datetime
 
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     question_large_text = models.TextField(max_length=1000, default='')
     pub_date = models.DateTimeField('date published', help_text="Please use the following format: <em>YYYY-MM-DD</em>.")
+
+    def __str__(self):
+        return self.question_text
+
+    @admin.display(
+        boolean=True,
+        ordering='pub_date',
+        description='Published recently?',
+    )
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
 
 
 class Choice(models.Model):
