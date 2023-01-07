@@ -1,9 +1,13 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+import time
+import asyncio
+import httpx
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 from django.urls import reverse
 from django.views.generic.list import ListView
 from django.contrib.auth import authenticate, login
+from asgiref.sync import sync_to_async, async_to_sync
 
 from .models import *
 from .forms import QuestionForm, QuestionModelFrom, LoginForm
@@ -91,3 +95,57 @@ def auth_view(request):
                 return HttpResponseRedirect(reverse('test'))
         else:
             return HttpResponse('Wrong method')
+
+
+def test_api(request):
+    time.sleep(1)
+    message = {'message': 'Hello from Beetroot'}
+    if 'task_id' in request.GET:
+        message['task_id'] = request.GET.get('task_id')
+    return JsonResponse(message)
+
+
+async def http_for_async():
+    for i in range(5):
+        async with httpx.AsyncClient() as client:
+            req = await client.get('http://localhost:8000/api/test', params={'task_id': i})
+            print(req.json())
+
+async def main_view(request):
+    loop = asyncio.get_event_loop()
+    loop.create_task(http_for_async())
+    return HttpResponse('Not blocking request')
+
+
+def http_for_sync():
+    for i in range(5):
+        req = httpx.get('http://localhost:8000/api/test', params={'task_id': i})
+        print(req.json())
+def sync_main_view(request):
+    http_for_sync()
+    return HttpResponse('Blocking request')
+
+
+async def async_with_sync_view(request):
+    loop = asyncio.get_event_loop()
+    async_function = sync_to_async(http_for_sync, thread_sensitive=False)
+    loop.create_task(async_function())
+    return HttpResponse("Non-blocking HTTP request (via sync_to_async)")
+
+
+def sync_with_async_view(request):
+    sync_func = async_to_sync(http_for_async)
+    sync_func()
+    return HttpResponse('Blocking HTTP request (via async_to_sync)')
+
+
+def http_blog_view():
+    time.sleep(10)
+    print('redirect')
+    return redirect('http://localhost:8000/blogs/')
+
+async def async_blog_view(request):
+    loop = asyncio.get_event_loop()
+    async_blog = sync_to_async(http_blog_view, thread_sensitive=False)
+    loop.create_task(async_blog())
+    return HttpResponse('Async Blog View')

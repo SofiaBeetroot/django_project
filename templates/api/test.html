@@ -17,6 +17,7 @@
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{ question.question_text | title }}</h5>
               <small>{{ question.pub_date | date_format }}</small>
+              <small>{{ post.id | likes }}</small>
             </div>
             <p class="mb-1">{{ question.question_large_text }}</p>
             <small>{# <a href="http://localhost:8000/question/update/{{ question.id }}">Update</a> #}Update</small>

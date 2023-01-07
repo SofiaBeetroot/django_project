@@ -32,5 +32,11 @@ urlpatterns = [
     path('question/update/<int:id>', update_question),
     path('question/perform_update/<int:id>', perform_update),
     path('login/', login_view),
-    path('login/auth/', auth_view)
+    path('login/auth/', auth_view),
+    path('api/test', test_api),
+    path('api/', main_view),
+    path('api/sync', sync_main_view),
+    path('api/async', async_with_sync_view),
+    path('api/atos', sync_with_async_view),
+    path('blog/async', async_blog_view)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
